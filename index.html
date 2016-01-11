@@ -1,0 +1,43 @@
+<!doctype html>
+<html ng-app="salesApp">
+<head>
+    <script src="js/angular.js"></script>
+    <script src="js/jquery.min.js"></script>
+    <script src="js/angular-resource.js"></script>
+    <script src="js/angular-route.js"></script>
+    <script type="text/javascript">
+        //services.js
+        var salesAppServices = angular.module('salesAppServices', ['ngResource']);
+
+        salesAppServices.factory('Login', ['$resource',
+            function($resource){
+                return $resource('http://localhost:8080/SRA/authenticate', {}, {
+                    query: {method:'POST', params:{ token : "QCiTzbXCAYA3AvDgYN3MuBwY/1i89q6TfW7aVS1Av1c=", digest : "6R1HZqYJFfRQUA0L/hqCEA==", user : { username : "john.doe", password : "X03MO1qnZdYdgyfeuILPmQ==" } }, isArray:true}
+                });
+            }]);
+
+        //controllers.js
+        var salesAppControllers = angular.module('salesAppControllers',['ngResource']);
+        salesAppControllers.controller('UserCtrl', ['$scope', 'Login', function($scope, Login) {
+            $scope.User = Login.query();
+        }]);
+
+
+        //app.js
+        var salesApp = angular.module('salesApp',['ngRoute','ngResource','salesAppControllers','salesAppServices']);
+
+
+
+    </script>
+</head>
+<body ng-controller="UserCtrl">
+{{result}}
+{{test}}
+<div>
+    <label>Name:</label>
+    <input type="text" ng-model="yourName" placeholder="Enter a name here">
+    <hr>
+    <h1>Hello {{yourName}}!</h1>
+</div>
+</body>
+</html>
